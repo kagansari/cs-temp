@@ -12,3 +12,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.ui.header {
+  font-family: 'Eurostile';
+  font-size: 32px;
+  letter-spacing: 1px;
+}
