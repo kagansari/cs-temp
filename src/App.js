@@ -34,8 +34,9 @@ const App = styled(props => {
     </div>
   );
 })`
-  min-width: 100%;
   display: inline-block;
+  min-width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   #sidebar {
     position: fixed;
