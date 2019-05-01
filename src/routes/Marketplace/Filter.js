@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 import Slider from 'rc-slider'
-import {Button, Checkbox, Header, Icon, Input, Label} from 'semantic-ui-react'
+import {Button, Checkbox, Header, Icon, Input, Label, Transition} from 'semantic-ui-react'
 import React from 'react'
 import 'rc-slider/assets/index.css';
 
 // override default rc-slider
-const CSRange = styled(Slider.Range)`
+const CSRange = styled(Slider.createSliderWithTooltip(Slider.Range))`
   & .rc-slider-handle {
     width: 20px;
     height: 20px;
@@ -35,30 +35,39 @@ const CSCheckbox = styled(Checkbox)`
   }
 `
 
-const FilterHeader = styled(({filter, showFilter, ...props}) => (
+const FilterHeader = styled(({filterHandler, toggleFilter, labels, search, ...props}) => (
   <div {...props}>
-    <Button basic icon labelPosition="left">
+    <Button basic icon labelPosition="left" onClick={toggleFilter}>
       <Icon name="sliders horizontal"/>
       <b>Filter</b>
     </Button>
-    <div>
-      <b>Show only:</b>
-    </div>
+    {
+      labels.length > 0 && (
+        <div>
+          <b>Show only:</b>
+        </div>
+      )
+    }
     <div id="filter-labels">
-      <Label as="a"><Icon name="times"/> Individual</Label>
-      <Label as="a"><Icon name="times"/> Employee</Label>
+      {
+        labels.map(({text, func}) => (
+          <Label key={text} as="a" onClick={func}><Icon name="times"/> {text}</Label>
+        ))
+      }
     </div>
-    <Button size="small" icon labelPosition="left">
+    <Button size="small" icon labelPosition="left" onClick={filterHandler.resetAll}>
       Clear <Icon name="trash"/>
     </Button>
-    <Button size="small" icon labelPosition="left" color="violet">
+    <Button size="small" icon labelPosition="left" color="violet" onClick={search}>
       Apply <Icon name="check"/>
     </Button>
   </div>
 ))`
   display: flex;
   align-items: center;
+  font-family: "Poppins Regular";
   font-size: 12px;
+  color: #20293B;
   > * {
     margin: 0 6px;
   }
@@ -67,56 +76,90 @@ const FilterHeader = styled(({filter, showFilter, ...props}) => (
   }
 `
 
-const FilterOptions = styled(({filter, showFilter, ...props}) => (
-  <div {...props}>
-    <div id="investor-filter" className="filter-option">
-      <Header as="h4">Investors</Header>
-      <div className="filter-toggles">
-        <div className="filter-toggle"><span>Individuals</span> <CSCheckbox toggle defaultChecked/></div>
-        <div className="filter-toggle"><span>Institutionals</span> <CSCheckbox toggle/></div>
-        <div className="filter-toggle"><span>Employees</span> <CSCheckbox toggle/></div>
+const FilterOptions = styled(({filter, filterHandler, ...props}) => {
+  const {
+    investors: {individuals, institutionals, employees},
+    contract: {safe, stock, convertibleNote, vcPortfolio},
+    price, favorite, transferable
+  } = filter
+  const {toggle, setTokens, setMinPrice, setMaxPrice} = filterHandler
+
+  return (
+    <div {...props}>
+      <div id="investor-filter" className="filter-option">
+        <Header as="h4">Investors</Header>
+        <div className="filter-toggles">
+          <div className="filter-toggle">
+            <span>Individuals</span>
+            <CSCheckbox toggle checked={individuals} onChange={toggle('investors.individuals')}/>
+          </div>
+          <div className="filter-toggle">
+            <span>Institutionals</span>
+            <CSCheckbox toggle checked={institutionals} onChange={toggle('investors.institutionals')}/>
+          </div>
+          <div className="filter-toggle">
+            <span>Employees</span>
+            <CSCheckbox toggle checked={employees} onChange={toggle('investors.employees')}/>
+          </div>
+        </div>
+      </div>
+      <div id="contract-filter" className="filter-option">
+        <Header as="h4">Contract</Header>
+        <div className="filter-toggles">
+          <div className="filter-toggle">
+            <span>Safe</span>
+            <CSCheckbox toggle checked={safe} onChange={toggle('contract.safe')}/>
+          </div>
+          <div className="filter-toggle">
+            <span>Stock</span>
+            <CSCheckbox toggle checked={stock} onChange={toggle('contract.stock')}/>
+          </div>
+          <div className="filter-toggle">
+            <span>Convertible Note</span>
+            <CSCheckbox toggle checked={convertibleNote} onChange={toggle('contract.convertibleNote')}/>
+          </div>
+          <div className="filter-toggle">
+            <span>VC Portfolio</span>
+            <CSCheckbox toggle checked={vcPortfolio} onChange={toggle('contract.vcPortfolio')}/>
+          </div>
+        </div>
+      </div>
+      <div id="share-filter" className="filter-option">
+        <Header as="h4">Share Percentage</Header>
+        <CSRange
+          min={0}
+          max={100}
+          step={5}
+          allowCross={false}
+          value={filter.tokens}
+          onChange={setTokens}
+          tipFormatter={value => `${value}%`}
+        />
+      </div>
+      <div id="price-filter" className="filter-option">
+        <Header as="h4">Price</Header>
+        <div className="filter-inputs">
+          <Input label="Min." type="number" placeholder="Price" size="small" value={price.min} onChange={setMinPrice}/>
+          <Input label="Max." type="number" placeholder="Price" size="small" value={price.max} onChange={setMaxPrice}/>
+        </div>
+      </div>
+      <div id="favorite-filter" className="filter-option">
+        <Header as="h4">My Favorites</Header>
+        <CSCheckbox toggle checked={favorite} onChange={toggle('favorite')}/>
+      </div>
+      <div id="transferable-filter" className="filter-option">
+        <Header as="h4">Transferable</Header>
+        <CSCheckbox toggle checked={transferable} onChange={toggle('transferable')}/>
       </div>
     </div>
-    <div id="contract-filter" className="filter-option">
-      <Header as="h4">Contract</Header>
-      <div className="filter-toggles">
-        <div className="filter-toggle"><span>Safe</span> <CSCheckbox toggle/></div>
-        <div className="filter-toggle"><span>Stock</span> <CSCheckbox toggle/></div>
-        <div className="filter-toggle"><span>Convertible Note</span> <CSCheckbox toggle/></div>
-        <div className="filter-toggle"><span>VC Portfolio</span> <CSCheckbox toggle/></div>
-      </div>
-    </div>
-    <div id="share-filter" className="filter-option">
-      <Header as="h4">Share Percentage</Header>
-      <CSRange
-        min={0}
-        max={100}
-        allowCross={false}
-        // handle={RangeHandle}
-        value={[20, 80]}
-        tipFormatter={value => `${value}%`}
-      />
-    </div>
-    <div id="price-filter" className="filter-option">
-      <Header as="h4">Price</Header>
-      <div className="filter-inputs">
-        <Input label="Min." type="number" placeholder="Price" size="small"/>
-        <Input label="Max." type="number" placeholder="Price" size="small"/>
-      </div>
-    </div>
-    <div id="favorite-filter" className="filter-option">
-      <Header as="h4">My Favorites</Header>
-      <CSCheckbox toggle/>
-    </div>
-    <div id="transferable-filter" className="filter-option">
-      <Header as="h4">Transferable</Header>
-      <CSCheckbox toggle/>
-    </div>
-  </div>
-))`
+  )
+})`
   display: flex;
   margin: 15px 0;
   padding: 15px 0;
+  overflow-x: scroll;
+  font-family: "Poppins Regular";
+  color: #20293B;
   > * {
     margin-right: 15px;
   }
@@ -157,14 +200,34 @@ const FilterOptions = styled(({filter, showFilter, ...props}) => (
   }
 `
 
-const Filter = styled(({filter, showFilter, ...props}) => (
-  <div {...props}>
-    <FilterHeader filter={filter}/>
-    <FilterOptions filter={filter}/>
-  </div>
-))`
-  font-family: "Poppins Regular";
-  color: #20293B;
-`
+class Filter extends React.Component {
+  state = {
+    show: false
+  }
+
+  toggleFilter = () => this.setState({ show: !this.state.show })
+
+  render() {
+    const {filter, filterHandler, labels, search, ...props} = this.props
+    return (
+      <div {...props}>
+        <FilterHeader
+          filterHandler={filterHandler}
+          labels={labels}
+          toggleFilter={this.toggleFilter}
+          search={search}
+        />
+        <Transition visible={this.state.show} animation='fade' duration={250}>
+          <div>
+            <FilterOptions
+              filter={filter}
+              filterHandler={filterHandler}
+            />
+          </div>
+        </Transition>
+      </div>
+    )
+  }
+}
 
 export default Filter
