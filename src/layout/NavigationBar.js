@@ -1,53 +1,11 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
-import {Divider, Header, Icon, Search, Transition} from 'semantic-ui-react'
+import {Header, Icon, Search, Transition} from 'semantic-ui-react'
 import {withRouter} from 'react-router'
-
-const Notifications = styled(props => (
-  <div {...props}>
-    <Header as="h4">Notifications</Header>
-    <Divider/>
-    <div id="notifications">
-      <button>
-        <div>Refresh</div>
-        <Icon name="refresh"/>
-      </button>
-    </div>
-  </div>
-))`
-  padding: 15px;
-  h4.ui.header {
-    margin: 10px 0;
-  }
-  #notifications {
-    text-align: center;
-    button {
-      margin-top: 35vh;
-      background: transparent;
-      border: none;
-      font-size: 12px;
-      color: #677792;
-      transition: all 250ms ease;
-      .icon { margin-top: 8px; }
-      &:hover {
-        color: #021D49;
-        cursor: pointer;
-      }
-    }
-  }
-`
-
-const Messages = styled(props => (
-  <div {...props}>
-    <Header as="h4">Messages</Header>
-    <Divider/>
-  </div>
-))`
-  padding: 15px;
-  h4.ui.header {
-    margin: 10px 0;
-  }
-`
+import Notifications from './Notifications'
+import Messages from './Messages'
+import UserPanel from './UserPanel'
+import {media} from '../style'
 
 const CSSearch = styled(Search)`
   flex-grow: 1;
@@ -83,25 +41,6 @@ const NavRight = styled.div`
   display: flex;
   align-items: stretch;
   height: 100%;
-  button {
-    min-width: 60px;
-    padding: 0;
-    color: #DDE5ED;
-    background-color: transparent;
-    border: none;
-    font-size: 22px;
-    transition: all 250ms ease;
-    &:hover, &:focus {
-      cursor: pointer;
-      outline: none;
-      color: #4E6180;
-      span { border-color: #4E6180; }
-    }
-    &.active {
-      color: #753BBD;
-      border-bottom: 2px solid #753BBD;
-    }
-  }
 `
 
 const Avatar = styled(({children, ...props}) => (
@@ -111,6 +50,12 @@ const Avatar = styled(({children, ...props}) => (
 ))`
   display: flex;
   align-items: center;
+  &.active {
+    color: #753BBD;
+    border-bottom: 2px solid #753BBD;
+    span { border-color: #753BBD; }
+  }
+
   span {
     width: 35px;
     height: 35px;
@@ -130,8 +75,12 @@ const RightPanel = styled.div`
   top: 80px;
   right: 0;
   bottom: 0;
-  width: 350px;
-  background-color: white;
+  min-width: 350px;
+  z-index: 1500;
+  ${media.mobile`
+    width: 100vw;
+    left: 0;
+  `}
 `
 
 const titles = {
@@ -145,42 +94,49 @@ const titles = {
 class RawNavigationBar extends Component {
   state = {
     isSearchLoading: false,
-    rightPanel: null // notifications|messages
+    rightPanel: null // notifications|messages|user-panel
   }
 
-  showNotifications = () => this.state.rightPanel === 'notifications'
-  showMessages = () => this.state.rightPanel === 'messages'
+  isOpen = key => this.state.rightPanel === key
+  toggle = key => () => this.setState(prevState => ({
+    rightPanel: prevState.rightPanel === key ? null : key
+  }))
 
-  toggleNotifications = () => this.setState({
-    rightPanel: this.showNotifications() ? null : 'notifications'
-  })
-  toggleMessages = () => this.setState({
-    rightPanel: this.showMessages() ? null : 'messages'
-  })
+  openSidebar = () => {
+    document.getElementById('container').classList.add('sidebar-active')
+  }
+
+  getClassName = key => this.isOpen(key) ? 'active':''
 
   render() {
     const {history, staticContext, location, ...props} = this.props
     console.log(location.pathname)
     return (
       <div {...props}>
-        <Header as="h2">{titles[location.pathname]}</Header>
+        <Header as="h2" className="desktop">{titles[location.pathname]}</Header>
+        <button onClick={this.openSidebar} className="mobile">
+          <Icon link name="bars"/>
+        </button>
         <CSSearch id="search-input" placeholder="Search..."/>
         <NavRight>
-          <button className={this.showNotifications() ? 'active':''} onClick={this.toggleNotifications}>
+          <button className={this.getClassName('notifications')} onClick={this.toggle('notifications')}>
             <Icon name="bell"/>
           </button>
-          <button className={this.showMessages() ? 'active':''} onClick={this.toggleMessages}>
+          <button className={this.getClassName('messages')} onClick={this.toggle('messages')}>
             <Icon name="comment"/>
           </button>
-          <Avatar>
+          <Avatar className={this.getClassName('user-panel')} onClick={this.toggle('user-panel')}>
             <Icon name="user"/>
           </Avatar>
         </NavRight>
-        <Transition visible={Boolean(this.state.rightPanel)} animation="slide down" duration={500}>
-          <RightPanel>
-            {this.showNotifications() && <Notifications/>}
-            {this.showMessages() && <Messages/>}
-          </RightPanel>
+        <Transition visible={this.isOpen('notifications')} animation="slide left" duration={250}>
+          <RightPanel><Notifications/></RightPanel>
+        </Transition>
+        <Transition visible={this.isOpen('messages')} animation="slide left" duration={250}>
+          <RightPanel><Messages/></RightPanel>
+        </Transition>
+        <Transition visible={this.isOpen('user-panel')} animation="slide left" duration={250}>
+          <RightPanel><UserPanel/></RightPanel>
         </Transition>
       </div>
     )
@@ -191,7 +147,6 @@ const NavigationBar = withRouter(styled(RawNavigationBar)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 80px;
   padding: 0 15px;
   background-color: white;
   border-bottom: 1px solid rgb(0, 0, 0, .25);
@@ -201,6 +156,25 @@ const NavigationBar = withRouter(styled(RawNavigationBar)`
     margin: 0;
     color: #021D49;
     white-space: nowrap;
+  }
+  button {
+    min-width: 50px;
+    padding: 0;
+    color: #DDE5ED;
+    background-color: transparent;
+    border: none;
+    font-size: 22px;
+    transition: all 250ms ease;
+    &:hover, &:focus {
+      cursor: pointer;
+      outline: none;
+      color: #4E6180;
+      span { border-color: #4E6180; }
+    }
+    &.active {
+      color: #753BBD;
+      border-bottom: 2px solid #753BBD;
+    }
   }
 `)
 
