@@ -9,30 +9,29 @@ import InvestmentData from './routes/InvestmentData'
 import Dashboard from './routes/Dashboard'
 import NavigationBar from './layout/NavigationBar'
 import Sidebar from './layout/Sidebar'
+import {GlobalStyle, media} from './style'
 import './fonts/style.css'
-import './index.css'
 
 const App = styled(props => {
   return (
-    <div {...props}>
+    <div id="container" {...props}>
+      <GlobalStyle/>
       <Router>
+        <NavigationBar id="navbar"/>
         <Sidebar id="sidebar"/>
-        <div id="main-container">
-          <div id="page-container">
-            <NavigationBar/>
-            <Switch>
-              <Route exact path="/portfolio" component={MyPortfolio}/>
-              <Route exact path="/offers" component={Offers}/>
-              <Route exact path="/marketplace" component={Marketplace}/>
-              <Route exact path="/investment-data" component={InvestmentData}/>
-              <Route exact path="/" component={Dashboard}/>
-              <Route component={() => <Redirect to="/"/>}/>
-            </Switch>
-          </div>
+        <div id="page-container">
+          <Switch>
+            <Route exact path="/portfolio" component={MyPortfolio}/>
+            <Route exact path="/offers" component={Offers}/>
+            <Route exact path="/marketplace" component={Marketplace}/>
+            <Route exact path="/investment-data" component={InvestmentData}/>
+            <Route exact path="/" component={Dashboard}/>
+            <Route component={() => <Redirect to="/"/>}/>
+          </Switch>
         </div>
       </Router>
     </div>
-  );
+  )
 })`
   display: inline-block;
   min-width: 100%;
@@ -41,19 +40,51 @@ const App = styled(props => {
   #sidebar {
     position: fixed;
     top: 0;
-    left: 0;
     bottom: 0;
-    width: 240px;
+    z-index: 2500;
+    transition: all 250ms ease;
+    ${media.mobile`
+      width: 100%;
+      left: -100%;
+    `}
+    ${media.desktop`
+      width: 240px;
+      left: -180px;
+    `}
   }
-  #main-container {
+  #navbar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 80px;
+    z-index: 2000;
+    transition: all 250ms ease;
+  }
+  #page-container {
+    margin-top: 80px; 
     min-height: 100vh;
-    margin-left: 240px; 
+    transition: margin 200ms ease;
     background-color: #F4F4F4;
-    #page-container {
-      min-height: 100vh;
-      min-width: 100%;
-    }
   }
+  ${media.mobile`
+    &.sidebar-active {
+      #sidebar { left: 0 }
+    }
+  `}
+  ${media.desktop`
+    #page-container, #navbar {
+      margin-left: 60px;
+    }
+    &.sidebar-active {
+      #sidebar {
+        left: 0;
+      }
+      #page-container, #navbar {
+        margin-left: 240px;
+      } 
+    }
+  `}
 `
 
 export default App;
