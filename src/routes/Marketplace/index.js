@@ -68,14 +68,15 @@ class Marketplace extends Component {
         filter: { tokens: [0, 100] }
       }))
     },
-    setMinPrice: e => {
-      const {value} = e.target
+    setMinPrice: (e, ...args) => {
+      // $12.345 -> 12345
+      const value = e.target.value.split(/[^\d]/).join('')
       this.setState(prevState => _.merge({}, prevState, {
         filter: { price: { min: value }}
       }))
     },
     setMaxPrice: e => {
-      const {value} = e.target
+      const value = e.target.value.split(/[^\d]/).join('')
       this.setState(prevState => _.merge({}, prevState, {
         filter: { price: { max: value }}
       }))

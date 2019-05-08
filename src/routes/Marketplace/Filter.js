@@ -1,7 +1,9 @@
+import React from 'react'
 import styled from 'styled-components'
 import Slider from 'rc-slider'
 import {Button, Checkbox, Header, Icon, Input, Label, Transition} from 'semantic-ui-react'
-import React from 'react'
+import MaskedInput from 'react-text-mask'
+import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 import 'rc-slider/assets/index.css';
 
 // override default rc-slider
@@ -139,8 +141,14 @@ const FilterOptions = styled(({filter, filterHandler, ...props}) => {
       <div id="price-filter" className="filter-option">
         <Header as="h4">Price</Header>
         <div className="filter-inputs">
-          <Input label="Min." type="number" placeholder="Price" size="small" value={price.min} onChange={setMinPrice}/>
-          <Input label="Max." type="number" placeholder="Price" size="small" value={price.max} onChange={setMaxPrice}/>
+          <Input
+            input={<MaskedInput mask={createNumberMask({prefix: '$'})}/>}
+            label="Min." placeholder="Price" size="small" value={price.min} onChange={setMinPrice}
+          />
+          <Input
+            input={<MaskedInput mask={createNumberMask({prefix: '$'})}/>}
+            label="Max." placeholder="Price" size="small" value={price.max} onChange={setMaxPrice}
+          />
         </div>
       </div>
       <div id="favorite-filter" className="filter-option">

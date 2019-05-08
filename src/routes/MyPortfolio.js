@@ -77,27 +77,24 @@ const TokenTable = ({tokens, ...props}) => (
 )
 
 const CSCard = styled(Card)`
-  &.ui.card {
-    width: 100%;
-    a.item, .header, .description {
-      font-family: 'Eurostile';
-    }
-    .tab-container {
-      overflow-x: scroll;
-      .ui.bottom.segment.tab {
-        padding: 0;
+  a.item, .header, .description {
+    font-family: 'Eurostile' !important;
+  }
+  .tab-container {
+    overflow-x: scroll;
+    .ui.bottom.segment.tab {
+      padding: 0;
+      border: none;
+      // remove semantic table borders
+      .ui.table {
         border: none;
-        // remove semantic table borders
-        .ui.table {
-          border: none;
-          tr th {
-            border: 0px !important;
-            font-family: "Eurostile";
-          }
-          tr td {
-            border: 0px !important;
-            font-family: "Poppins Regular";
-          }
+        tr th {
+          border: 0px !important;
+          font-family: "Eurostile";
+        }
+        tr td {
+          border: 0px !important;
+          font-family: "Poppins Regular";
         }
       }
     }
@@ -105,7 +102,7 @@ const CSCard = styled(Card)`
 `
 
 const MyContracts = props => (
-  <CSCard color="violet" {...props}>
+  <CSCard fluid color="violet" {...props}>
     <Card.Content>
       <Card.Header>My Contracts</Card.Header>
       <Card.Description>But I must explain to you how all this mistaken</Card.Description>
@@ -128,7 +125,7 @@ const MyContracts = props => (
 )
 
 const MyTokens = props => (
-  <CSCard color="violet" {...props}>
+  <CSCard fluid color="violet" {...props}>
     <Card.Content>
       <Card.Header>My Tokens</Card.Header>
       <Card.Description>But I must explain to you how all this mistaken</Card.Description>
@@ -157,7 +154,7 @@ const wallets = [
   }
 ]
 class RawBalances extends React.Component {
-  inputRef = React.createRef()
+  inputRef = React.createRef() // address input
 
   state = {
     activeWallet: wallets[0]
@@ -177,7 +174,7 @@ class RawBalances extends React.Component {
   render() {
     const activeWallet = this.state.activeWallet
     return (
-      <CSCard color="violet" {...this.props}>
+      <CSCard fluid color="violet" {...this.props}>
         <Card.Content>
           <Card.Header>Balances</Card.Header>
           <Card.Description>But I must explain to you how all this mistaken</Card.Description>
