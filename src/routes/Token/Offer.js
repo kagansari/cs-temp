@@ -11,11 +11,11 @@ const OfferForm = ({minToken, minPrice, amount, price, onChange, pricePerToken, 
       <Grid columns={2}>
         <Grid.Row>
           <Grid.Column>Min. Token</Grid.Column>
-          <Grid.Column><Icon name="ethereum"/> {util.formatNumberFloat(minToken)}</Grid.Column>
+          <Grid.Column><Icon name="ethereum"/>{util.formatNumberFloat(minToken)}</Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column>Min. Price</Grid.Column>
-          <Grid.Column><Icon name="dollar"/> {util.formatNumberFloat(minPrice)}</Grid.Column>
+          <Grid.Column><Icon name="dollar"/>{util.formatNumberFloat(minPrice)}</Grid.Column>
         </Grid.Row>
       </Grid>
     </Grid.Column>

@@ -21,13 +21,13 @@ const Contract = () => {
   const contractInfo = [
     { key: 'Type', value: 'Safe' },
     { key: 'Issue Date', value: '12.12.2012' },
-    { key: 'Purchase Amount', value: <Fragment><Icon name="dollar"/> {util.formatNumber(150000)}</Fragment> },
+    { key: 'Purchase Amount', value: <Fragment><Icon name="dollar"/>{util.formatNumber(150000)}</Fragment> },
     { key: 'Convert to', value: 'Common' },
-    { key: 'Qualified Financing Amount', value: <Fragment><Icon name="dollar"/> {util.formatNumberFloat(2500000)}</Fragment> },
+    { key: 'Qualified Financing Amount', value: <Fragment><Icon name="dollar"/>{util.formatNumberFloat(2500000)}</Fragment> },
     { key: 'Early Exit Multiple', value: '2.3' },
-    { key: 'Valuation Cap', value: <Fragment><Icon name="dollar"/> {util.formatNumberFloat(2500000)}</Fragment> },
+    { key: 'Valuation Cap', value: <Fragment><Icon name="dollar"/>{util.formatNumberFloat(2500000)}</Fragment> },
     { key: 'Discount Rate', value: '12%' },
-    { key: 'Face Value', value: <Fragment><Icon name="dollar"/> {util.formatNumberFloat(0.04656)}</Fragment> },
+    { key: 'Face Value', value: <Fragment><Icon name="dollar"/>{util.formatNumberFloat(0.04656)}</Fragment> },
     { key: 'Document #', value: <b>asdqefwdf13r1fqsqed1d23e1d231</b> },
     { key: 'Description', value: 'Lorem ipsum dolor sit amet' }
   ]
@@ -53,8 +53,8 @@ const SmartContract = () => {
   const smartContractInfo = [
     { key: 'Contract Address', value: <b>x04a3c71dcecc5da65d1f1c4871eb4d14ecc5da65d</b> },
     { key: 'Creation Date', value: '12.10.2014' },
-    { key: 'Transferable Token Amount', value: <Fragment><Icon name="ethereum"/> {util.formatNumber(500000)}</Fragment> },
-    { key: 'Total Token Amount', value: <Fragment><Icon name="ethereum"/> {util.formatNumber(750000)}</Fragment> },
+    { key: 'Transferable Token Amount', value: <Fragment><Icon name="ethereum"/>{util.formatNumber(500000)}</Fragment> },
+    { key: 'Total Token Amount', value: <Fragment><Icon name="ethereum"/>{util.formatNumber(750000)}</Fragment> },
     { key: 'Number of Token Holders', value: 23 }
   ]
   return (
@@ -224,7 +224,7 @@ const HolderList = () => {
             holders.map(holder => (
               <Table.Row key={holder.id}>
                 <Table.Cell><b>{holder.name}</b></Table.Cell>
-                <Table.Cell><Icon name="ethereum"/> {util.formatNumber(holder.amount)}</Table.Cell>
+                <Table.Cell><Icon name="ethereum"/>{util.formatNumber(holder.amount)}</Table.Cell>
                 <Table.Cell>{holder.purchasedDate}</Table.Cell>
               </Table.Row>
             ))
