@@ -128,7 +128,7 @@ const FilterOptions = ({filter, filterHandler, ...props}) => {
 }
 
 const Labels = ({labels}) => (
-  <Grid>
+  <Grid columns={1}>
     <Grid.Row>
       <Grid.Column>
         <span>Show only:</span>
