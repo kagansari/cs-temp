@@ -50,26 +50,10 @@ const FilterHeader = ({filterHandler, toggleFilter, labels, search}) => (
         <Button icon="check" content="Apply" labelPosition="left" onClick={search}/>
       </Grid.Column>
     </Grid.Row>
-    {
-      labels.length > 0 && (
-        <Grid.Row>
-          <Grid.Column>
-            <span>Show only:</span>
-            {
-              labels.map(({text, func}) => (
-                <Label key={text} as="a" onClick={func}>
-                  <Icon name="times"/> {text}
-                </Label>
-              ))
-            }
-          </Grid.Column>
-        </Grid.Row>
-      )
-    }
   </Grid>
 )
 
-const FilterOptions = ({filter, filterHandler}) => {
+const FilterOptions = ({filter, filterHandler, ...props}) => {
   const {
     investors: {individuals, institutionals, employees},
     contract: {safe, stock, convertibleNote, vcPortfolio},
@@ -78,7 +62,7 @@ const FilterOptions = ({filter, filterHandler}) => {
   const {toggle, setMinPrice, setMaxPrice/*, setTokens*/} = filterHandler
 
   return (
-    <Grid columns={4}>
+    <Grid columns={4} {...props}>
       <Grid.Row>
         {/* INVESTORS */}
         <Grid.Column>
@@ -143,6 +127,23 @@ const FilterOptions = ({filter, filterHandler}) => {
   )
 }
 
+const Labels = ({labels}) => (
+  <Grid>
+    <Grid.Row>
+      <Grid.Column>
+        <span>Show only:</span>
+        {
+          labels.map(({text, func}) => (
+            <Label key={text} as="a" onClick={func}>
+              <Icon name="times"/> {text}
+            </Label>
+          ))
+        }
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+)
+
 class Filter extends React.Component {
   state = {
     show: false
@@ -161,13 +162,12 @@ class Filter extends React.Component {
           search={search}
         />
         <Transition visible={this.state.show} animation='fade' duration={250}>
-          <div>
-            <FilterOptions
-              filter={filter}
-              filterHandler={filterHandler}
-            />
-          </div>
+          <FilterOptions
+            filter={filter}
+            filterHandler={filterHandler}
+          />
         </Transition>
+        { labels.length > 0 && <Labels labels={labels}/> }
       </div>
     )
   }
