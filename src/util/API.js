@@ -27,9 +27,9 @@ const API = {
       query({
         operation: 'marketplace',
         fields: [{ data }, { paginatorInfo }],
-        variables: {
-          filter
-        }
+        // variables: {
+        //   filter
+        // }
       })
     )
   }

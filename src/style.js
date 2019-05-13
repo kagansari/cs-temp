@@ -26,7 +26,7 @@ code {
 }
 
 .ui.grid {
-  &.fluid { min-width: 100%; }
+  &.fluid { min-width: 100% !important; }
 }
 .ui.header {
   font-family: 'eurostile';
@@ -37,9 +37,17 @@ code {
   margin: 0;
 }
 
-.m0 {
-  margin: 0 !important;
+// utility classes
+.flex {
+  display: flex;
+  &.center { justify-content: center; }
+  &.space-between { justify-content: space-between; }
+  &.align-center { align-items: center; }
+  &.align-start { align-items: flex-start; }
+  &.align-stretch { align-items: stretch; }
 }
+.m0 { margin: 0 !important; }
+.mb5 { margin-bottom: 5px; }
 .danger {
   color: #EE2737;
 }
@@ -54,15 +62,5 @@ code {
 // hide in desktop
 .mobile {
   ${media.desktop` display: none !important; `}
-}
-
-// utility classes
-.flex {
-  display: flex;
-  &.center { justify-content: center; }
-  &.space-between { justify-content: space-between; }
-  &.align-center { align-items: center; }
-  &.align-start { align-items: flex-start; }
-  &.align-stretch { align-items: stretch; }
 }
 `

@@ -1,6 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import {Button, Checkbox, Dropdown, Header, Icon, Input, Label, Transition} from 'semantic-ui-react'
+import {Button, Checkbox, Dropdown, Grid, Header, Icon, Input, Label, Transition} from 'semantic-ui-react'
 import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
@@ -34,60 +33,43 @@ const contractTypes = [
   { key: 'company', text: 'Companies', value: 'company' },
 ]
 
-const FilterHeader = styled(({filterHandler, toggleFilter, labels, search, ...props}) => (
-  <div {...props}>
-    <Button
-      color="grey" size="tiny" labelPosition="left"
-      icon="sliders horizontal" content="Filter"
-      onClick={toggleFilter}
-    />
+const FilterHeader = ({filterHandler, toggleFilter, labels, search}) => (
+  <Grid columns={2} className="fluid">
+    <Grid.Row>
+      <Grid.Column tablet={16} computer={6}>
+        <Button icon="sliders horizontal" content="Filter" labelPosition="left" onClick={toggleFilter}/>
+        <Button icon="sync alternate" content="Update" color="blue" labelPosition="right" onClick={search}/>
+      </Grid.Column>
+      <Grid.Column tablet={16} computer={10} textAlign="right">
+        <Input
+          label={<Dropdown defaultValue='contract' options={contractTypes}/>}
+          labelPosition='right'
+          placeholder="ID"
+        />
+        <Button icon="trash" content="Clear" labelPosition="left" onClick={filterHandler.resetAll}/>
+        <Button icon="check" content="Apply" labelPosition="left" onClick={search}/>
+      </Grid.Column>
+    </Grid.Row>
     {
       labels.length > 0 && (
-        <div>Show only:</div>
+        <Grid.Row>
+          <Grid.Column>
+            <span>Show only:</span>
+            {
+              labels.map(({text, func}) => (
+                <Label key={text} as="a" onClick={func}>
+                  <Icon name="times"/> {text}
+                </Label>
+              ))
+            }
+          </Grid.Column>
+        </Grid.Row>
       )
     }
-    <div id="filter-labels">
-      {
-        labels.map(({text, func}) => (
-          <Label key={text} as="a" onClick={func} color="grey">
-            <Icon name="times"/> {text}
-          </Label>
-        ))
-      }
-    </div>
-    <Input
-      label={<Dropdown size="small" defaultValue='contract' options={contractTypes}/>}
-      labelPosition='right'
-      placeholder="ID"
-    />
-    <Button size="tiny" color="grey" icon labelPosition="left" onClick={filterHandler.resetAll}>
-      Clear <Icon name="trash"/>
-    </Button>
-    <Button primary size="tiny" icon labelPosition="left" onClick={search}>
-      Apply <Icon name="check"/>
-    </Button>
-  </div>
-))`
-  display: flex;
-  align-items: center;
-  font-family: "poppins";
-  .ui.button {
-    font-family: "poppins" !important;
-    font-weight: 700 !important;
-  }
-  .ui.label {
-    padding: 9px;
-  }
-  font-size: 12px;
-  > * {
-    margin: 0 6px;
-  }
-  #filter-labels {
-    flex-grow: 1;
-  }
-`
+  </Grid>
+)
 
-const FilterOptions = styled(({filter, filterHandler, ...props}) => {
+const FilterOptions = ({filter, filterHandler}) => {
   const {
     investors: {individuals, institutionals, employees},
     contract: {safe, stock, convertibleNote, vcPortfolio},
@@ -96,114 +78,70 @@ const FilterOptions = styled(({filter, filterHandler, ...props}) => {
   const {toggle, setMinPrice, setMaxPrice/*, setTokens*/} = filterHandler
 
   return (
-    <div {...props}>
-      <div id="investor-filter" className="filter-option">
-        <Header as="h4">Investors</Header>
-        <div className="filter-toggle">
-          <span>Individuals</span>
-          <Checkbox toggle checked={individuals} onChange={toggle('investors.individuals')}/>
-        </div>
-        <div className="filter-toggle">
-          <span>Institutionals</span>
-          <Checkbox toggle checked={institutionals} onChange={toggle('investors.institutionals')}/>
-        </div>
-        <div className="filter-toggle">
-          <span>Employees</span>
-          <Checkbox toggle checked={employees} onChange={toggle('investors.employees')}/>
-        </div>
-      </div>
-      <div id="contract-filter" className="filter-option">
-        <Header as="h4">Contract</Header>
-        <div className="filter-toggle">
-          <span>Safe</span>
-          <Checkbox toggle checked={safe} onChange={toggle('contract.safe')}/>
-        </div>
-        <div className="filter-toggle">
-          <span>Stock</span>
-          <Checkbox toggle checked={stock} onChange={toggle('contract.stock')}/>
-        </div>
-        <div className="filter-toggle">
-          <span>Convertible Note</span>
-          <Checkbox toggle checked={convertibleNote} onChange={toggle('contract.convertibleNote')}/>
-        </div>
-        <div className="filter-toggle">
-          <span>VC Portfolio</span>
-          <Checkbox toggle checked={vcPortfolio} onChange={toggle('contract.vcPortfolio')}/>
-        </div>
-      </div>
-      {/*<div id="share-filter" className="filter-option">*/}
-        {/*<Header as="h4">Share Percentage</Header>*/}
-        {/*<CSRange*/}
-          {/*min={0}*/}
-          {/*max={100}*/}
-          {/*step={5}*/}
-          {/*allowCross={false}*/}
-          {/*value={filter.tokens}*/}
-          {/*onChange={setTokens}*/}
-          {/*tipFormatter={value => `${value}%`}*/}
-        {/*/>*/}
-      {/*</div>*/}
-      <div id="price-filter" className="filter-option">
-        <Header as="h4">Price</Header>
-        {/*<div className="filter-inputs">*/}
-        <Input
-          input={<MaskedInput mask={createNumberMask({prefix: ''})}/>}
-          label={{content: "$", color: 'grey' }} size="small"  placeholder="Min. Price" fluid
-          value={price.min}
-          onChange={setMinPrice}
-        />
-        <Input
-          input={<MaskedInput mask={createNumberMask({prefix: ''})}/>}
-          label={{content: "$", color: 'grey' }} size="small" placeholder="Max. Price" fluid
-          value={price.max}
-          onChange={setMaxPrice}
-        />
-        {/*</div>*/}
-      </div>
-      <div id="favorite-filter" className="filter-option">
-        <Header as="h4">My Favorites</Header>
-        <Checkbox toggle checked={favorite} onChange={toggle('favorite')}/>
-      </div>
-      <div id="transferable-filter" className="filter-option">
-        <Header as="h4">Transferable</Header>
-        <Checkbox toggle checked={transferable} onChange={toggle('transferable')}/>
-      </div>
-    </div>
+    <Grid columns={4}>
+      <Grid.Row>
+        {/* INVESTORS */}
+        <Grid.Column>
+          <Header as="h4">Investors</Header>
+          <div className="flex space-between mb5">
+            <span>Individuals</span>
+            <Checkbox toggle checked={individuals} onChange={toggle('investors.individuals')}/>
+          </div>
+          <div className="flex space-between mb5">
+            <span>Institutionals</span>
+            <Checkbox toggle checked={institutionals} onChange={toggle('investors.institutionals')}/>
+          </div>
+          <div className="flex space-between mb5">
+            <span>Employees</span>
+            <Checkbox toggle checked={employees} onChange={toggle('investors.employees')}/>
+          </div>
+        </Grid.Column>
+        {/* CONTRACT TYPE */}
+        <Grid.Column>
+          <Header as="h4">Contract</Header>
+          <div className="flex space-between mb5">
+            <span>Safe</span>
+            <Checkbox toggle checked={safe} onChange={toggle('contract.safe')}/>
+          </div>
+          <div className="flex space-between mb5">
+            <span>Stock</span>
+            <Checkbox toggle checked={stock} onChange={toggle('contract.stock')}/>
+          </div>
+          <div className="flex space-between mb5">
+            <span>Convertible Note</span>
+            <Checkbox toggle checked={convertibleNote} onChange={toggle('contract.convertibleNote')}/>
+          </div>
+          <div className="flex space-between mb5">
+            <span>VC Portfolio</span>
+            <Checkbox toggle checked={vcPortfolio} onChange={toggle('contract.vcPortfolio')}/>
+          </div>
+        </Grid.Column>
+        {/* PRICE */}
+        <Grid.Column>
+          <Header as="h4">Price</Header>
+          <Input
+            input={<MaskedInput mask={createNumberMask({prefix: ''})}/>}
+            label={{content: '$'}} placeholder="Min. Price" fluid
+            value={price.min} onChange={setMinPrice}
+          />
+          <br/>
+          <Input
+            input={<MaskedInput mask={createNumberMask({prefix: ''})}/>}
+            label={{content: '$'}} placeholder="Max. Price" fluid
+            value={price.max} onChange={setMaxPrice}
+          />
+        </Grid.Column>
+        {/* FAVORITE AND TRANSFERABLE */}
+        <Grid.Column>
+          <Header as="h4">My Favorites</Header>
+          <Checkbox toggle checked={favorite} onChange={toggle('favorite')}/>
+          <Header as="h4">Transferable</Header>
+          <Checkbox toggle checked={transferable} onChange={toggle('transferable')}/>
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
   )
-})`
-  display: flex;
-  margin: 15px 0;
-  padding: 15px 0;
-  overflow-x: scroll;
-  font-family: "poppins";
-  > * {
-    margin-right: 15px;
-  }
-  #investor-filter, #contract-filter {
-    min-width: 175px;
-    .filter-toggle {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px;
-    }
-  }
-  //#share-filter {
-  //  min-width: 200px;
-  //  .rc-slider {
-  //    margin-top: 25px;
-  //  }
-  //}
-  #price-filter {
-    .ui.input {
-      width: 150px;
-      margin-bottom: 10px;
-    }
-  }
-  #favorite-filter, #transferable-filter {
-    min-width: 120px;
-    .ui.toggle { margin-top: 8px; }
-  }
-`
+}
 
 class Filter extends React.Component {
   state = {

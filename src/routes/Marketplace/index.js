@@ -165,14 +165,10 @@ class Marketplace extends Component {
                 />
                 <br/>
                 <div className="scroll-x">
-                  <MarketplaceTable data={this.state.data} search={this.search}/>
+                  <MarketplaceTable data={this.state.data}/>
                 </div>
                 <Segment basic textAlign="center">
-                  <Button
-                    color="grey" size="tiny" labelPosition="left"
-                    icon="ellipsis horizontal" content="Load More"
-                    onClick={this.search}
-                  />
+                  <Button labelPosition="left" icon="ellipsis horizontal" content="Load More" onClick={this.search}/>
                 </Segment>
               </Card.Content>
               <Card.Content>
