@@ -1,24 +1,27 @@
 import React, {Component} from 'react'
-import styled from 'styled-components'
 import _ from 'lodash'
 import CSBreadcrumb from '../../components/CSBreadcrumb'
 import Filter from './Filter'
 import MarketplaceTable from './MarketplaceTable'
 import util from '../../util'
 import {marketplace as mockData} from '../../util/mock'
-import {Dimmer, Loader, Segment} from 'semantic-ui-react'
+import {Button, Card, Container, Dimmer, Grid, Icon, Loader, Popup, Segment} from 'semantic-ui-react'
 
-const Card = styled(Segment)`
-  margin: 15px !important;
-  padding: 15px;
-  background-color: white;
-  box-shadow: 0 1px 2px #ccc;
-`
-
-const TableContainer = styled.div`
-  overflow-x: scroll;
-  margin-top: 20px;
-`
+const MockCard = () => (
+  <Card fluid color="violet">
+    <Card.Content>
+      <Card.Header>
+        <Popup trigger={<Icon color="grey" name="info circle"/>} content="Info" inverted/>
+        Title
+      </Card.Header>
+      <Card.Meta>Subtitle</Card.Meta>
+      <br/><br/>
+    </Card.Content>
+    <Card.Content>
+      <Icon name="clock outline" color="grey"/> <small>Last updated: 12 Min.</small>
+    </Card.Content>
+  </Card>
+)
 
 class Marketplace extends Component {
   defaultFilter = {
@@ -33,7 +36,7 @@ class Marketplace extends Component {
       convertibleNote: false,
       vcPortfolio: false
     },
-    tokens: [0, 100],
+    // tokens: [0, 100],
     price: {
       min: '',
       max: ''
@@ -58,30 +61,30 @@ class Marketplace extends Component {
         return newState
       })
     },
-    setTokens: value => {
-      this.setState(prevState => _.merge({}, prevState, {
-        filter: { tokens: value }
-      }))
-    },
-    resetTokens: () => {
-      this.setState(prevState => _.merge({}, prevState, {
-        filter: { tokens: [0, 100] }
-      }))
-    },
-    setMinPrice: (e, ...args) => {
+    // setTokens: value => {
+    //   this.setState(prevState => _.merge({}, prevState, {
+    //     filter: { tokens: value }
+    //   }))
+    // },
+    // resetTokens: () => {
+    //   this.setState(prevState => _.merge({}, prevState, {
+    //     filter: { tokens: [0, 100] }
+    //   }))
+    // },
+    setMinPrice: e => {
       // $12.345 -> 12345
-      const value = e.target.value.split(/[^\d]/).join('')
+      const value = util.getNumberFromStr(e.target.value)
       this.setState(prevState => _.merge({}, prevState, {
         filter: { price: { min: value }}
       }))
     },
     setMaxPrice: e => {
-      const value = e.target.value.split(/[^\d]/).join('')
+      const value = util.getNumberFromStr(e.target.value)
       this.setState(prevState => _.merge({}, prevState, {
         filter: { price: { max: value }}
       }))
     },
-    resetPrice: e => {
+    resetPrice: () => {
       this.setState(prevState => _.merge({}, prevState, {
         filter: { price: { min: '', max: '' }}
       }))
@@ -93,8 +96,8 @@ class Marketplace extends Component {
 
   getLabels = () => {
     const labels = []
-    const {filter: {investors, contract, tokens, price, favorite, transferable}} = this.state
-    const {toggle, resetTokens, resetPrice} = this.filterHandler
+    const {filter: {investors, contract, /*tokens,*/ price, favorite, transferable}} = this.state
+    const {toggle, /*resetTokens,*/ resetPrice} = this.filterHandler
 
     if (investors.individuals) labels.push({text: 'Investors', func: toggle('investors.individuals')})
     if (investors.institutionals) labels.push({text: 'Institutionals', func: toggle('investors.institutionals')})
@@ -104,12 +107,12 @@ class Marketplace extends Component {
     if (contract.convertibleNote) labels.push({text: 'Convertible Note', func: toggle('contract.convertibleNote')})
     if (contract.vcPortfolio) labels.push({text: 'VC Portfolio', func: toggle('contract.vcPortfolio')})
 
-    if (tokens[0] !== 0 || tokens[1] !== 100) {
-      labels.push({
-        text: `Share Percentage ${tokens[0]}% - ${tokens[1]}%`,
-        func: resetTokens
-      })
-    }
+    // if (tokens[0] !== 0 || tokens[1] !== 100) {
+    //   labels.push({
+    //     text: `Share Percentage ${tokens[0]}% - ${tokens[1]}%`,
+    //     func: resetTokens
+    //   })
+    // }
 
     if (price.min !== '' || price.max !== '') {
       const minPrice = price.min === '' ? '$0' : `$${util.formatNumber(price.min)}`
@@ -139,23 +142,47 @@ class Marketplace extends Component {
 
   render() {
     return (
-      <div>
+      <Container fluid>
         <CSBreadcrumb title="Marketplace"/>
-        <Card>
-          <Dimmer active={this.state.isLoading}>
-            <Loader content='Loading' />
-          </Dimmer>
-          <Filter
-            filter={this.state.filter}
-            filterHandler={this.filterHandler}
-            labels={this.getLabels()}
-            search={this.search}
-          />
-          <TableContainer>
-            <MarketplaceTable data={this.state.data} search={this.search}/>
-          </TableContainer>
-        </Card>
-      </div>
+        <Grid padded>
+          <Grid.Row>
+            {
+              [0, 1, 2].map(i => <Grid.Column key={i} width={4}><MockCard/></Grid.Column>)
+            }
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+            <Card fluid raised color="violet">
+              <Card.Content>
+                <Dimmer inverted active={this.state.isLoading}>
+                  <Loader content='Loading' />
+                </Dimmer>
+                <Filter
+                  filter={this.state.filter}
+                  filterHandler={this.filterHandler}
+                  labels={this.getLabels()}
+                  search={this.search}
+                />
+                <br/>
+                <div className="scroll-x">
+                  <MarketplaceTable data={this.state.data} search={this.search}/>
+                </div>
+                <Segment basic textAlign="center">
+                  <Button
+                    color="grey" size="tiny" labelPosition="left"
+                    icon="ellipsis horizontal" content="Load More"
+                    onClick={this.search}
+                  />
+                </Segment>
+              </Card.Content>
+              <Card.Content>
+                <Icon name="clock outline" color="grey"/> <small>Last updated: 12 Min.</small>
+              </Card.Content>
+            </Card>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Container>
     )
   }
 }

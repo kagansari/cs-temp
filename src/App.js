@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import {Switch} from 'react-router'
 import styled from 'styled-components'
 import MyPortfolio from './routes/MyPortfolio'
@@ -10,81 +10,56 @@ import Dashboard from './routes/Dashboard'
 import NavigationBar from './layout/NavigationBar'
 import Sidebar from './layout/Sidebar'
 import {GlobalStyle, media} from './style'
-import './fonts/style.css'
+import TokenDetails from './routes/Token'
 
-const App = styled(props => {
-  return (
-    <div id="container" {...props}>
-      <GlobalStyle/>
-      <Router>
-        <NavigationBar id="navbar"/>
-        <Sidebar id="sidebar"/>
-        <div id="page-container">
-          <Switch>
-            <Route exact path="/portfolio" component={MyPortfolio}/>
-            <Route exact path="/offers" component={Offers}/>
-            <Route exact path="/marketplace" component={Marketplace}/>
-            <Route exact path="/investment-data" component={InvestmentData}/>
-            <Route exact path="/" component={Dashboard}/>
-            <Route component={() => <Redirect to="/"/>}/>
-          </Switch>
-        </div>
-      </Router>
-    </div>
-  )
-})`
-  display: inline-block;
-  min-width: 100%;
-  max-width: 100%;
-  min-height: 100vh;
-  #sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    z-index: 2500;
-    transition: all 250ms ease;
-    ${media.mobile`
-      width: 100%;
-      left: -100%;
-    `}
-    ${media.desktop`
-      width: 240px;
-      left: -180px;
-    `}
-  }
-  #navbar {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    height: 80px;
-    z-index: 2000;
-    transition: all 250ms ease;
-  }
-  #page-container {
-    margin-top: 80px; 
-    min-height: 100vh;
-    transition: margin 200ms ease;
-    background-color: #F4F4F4;
-  }
-  ${media.mobile`
-    &.sidebar-active {
-      #sidebar { left: 0 }
-    }
-  `}
+const PageContainer = styled.div`
+  margin-top: 60px; 
+  transition: margin 200ms ease;
   ${media.desktop`
-    #page-container, #navbar {
-      margin-left: 60px;
-    }
-    &.sidebar-active {
-      #sidebar {
-        left: 0;
-      }
-      #page-container, #navbar {
-        margin-left: 240px;
-      } 
-    }
+    margin-left: ${props => props.isSidebarOpen ? 240 : 60}px;
   `}
 `
+
+class App extends React.Component {
+  state = {
+    isSidebarOpen: false
+  }
+  toggleSidebar = () => this.setState(prevState => ({
+    isSidebarOpen: !prevState.isSidebarOpen
+  }))
+
+  componentDidMount() {
+    // open sidebar on desktop
+    if (document.body.offsetWidth > 600 && !this.state.isSidebarOpen) {
+      this.toggleSidebar()
+    }
+  }
+
+  render() {
+    const { isSidebarOpen } = this.state
+    const { toggleSidebar } = this
+
+    return (
+      <div id="container" {...this.props}>
+        <GlobalStyle/>
+        <Router>
+          <Sidebar id="sidebar" {...{ isSidebarOpen, toggleSidebar }}/>
+          <NavigationBar id="navbar" {...{ isSidebarOpen, toggleSidebar }}/>
+          <PageContainer id="page-container" {...{ isSidebarOpen }}>
+            <Switch>
+              <Route exact path="/portfolio" component={MyPortfolio}/>
+              <Route exact path="/offers" component={Offers}/>
+              <Route exact path="/marketplace" component={Marketplace}/>
+              <Route exact path="/marketplace/:tokenId" component={TokenDetails}/>
+              <Route exact path="/investment-data" component={InvestmentData}/>
+              <Route exact path="/" component={Dashboard}/>
+              <Route component={() => <Redirect to="/"/>}/>
+            </Switch>
+          </PageContainer>
+        </Router>
+      </div>
+    )
+  }
+}
 
 export default App;

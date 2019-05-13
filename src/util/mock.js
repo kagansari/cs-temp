@@ -657,3 +657,50 @@ export const marketplace = [
     "updated_at": "2019-04-04 21:44:53"
   }
 ]
+
+export const token = {
+  "uuid": "b9b5df02-3019-48b2-99e2-f95ba46fca6e",
+  "contract": {
+    "uuid": "e77d381a-5471-4db1-9db6-435040ec0a6b",
+    "owner": {
+      "firstname": "Akide4",
+      "lastname": "Tester"
+    },
+    "status": "pending",
+    "contract_type": null,
+    "contract_data": {
+      "contract_type": "SAFE",
+      "company_cik": "0001754486",
+      "rofr": 1,
+      "restriction": 1,
+      "agreement_pdf": 7,
+      "contract_pdf": 8,
+      "face_value": null,
+      "purchase_amount": "120000.00",
+      "convert_to": "common",
+      "qualified_amount": null,
+      "early_exit": null,
+      "valuation_cap": null,
+      "discount_ratio": null,
+      "comments": null,
+      "issue_date": "2018-04-01T16:28:04.000000Z"
+    },
+    "created_at": "2019-04-02 16:28:04",
+    "updated_at": "2019-04-02 16:28:17"
+  },
+  "seller": {
+    "firstname": "Akide2",
+    "lastname": "Tester",
+    "profile": {
+      "company_name": "Creosafe Inc."
+    }
+  },
+  "status": "visible",
+  "tokens": 2500000,
+  "initialprice": "9000",
+  "market_data": {
+    "contract_type": "SAFE"
+  },
+  "created_at": "2019-04-02 17:09:21",
+  "updated_at": "2019-04-02 17:09:21"
+}

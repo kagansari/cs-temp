@@ -2,19 +2,23 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 import {Header, Icon, Search, Transition} from 'semantic-ui-react'
 import {withRouter} from 'react-router'
+import PropTypes from 'prop-types'
 import Notifications from './Notifications'
 import Messages from './Messages'
 import UserPanel from './UserPanel'
-import {media} from '../style'
+import {media} from '../../style'
+import {SidebarButton} from '../Sidebar'
 
 const CSSearch = styled(Search)`
   flex-grow: 1;
   max-width: 600px;
-  margin: 0 30px;
+  margin: 0 15px;
+  ${media.desktop` max-width: 600px; `}
+  ${media.mobile` max-width: 200px; `}
   .ui.input {
     width: 100%;
     input {
-      height: 50px;
+      height: 35px;
       width: 100%;
       border: 1px solid #B8C2CC;
       border-radius: 4px;
@@ -37,9 +41,9 @@ const CSSearch = styled(Search)`
   }
 `
 
-const NavRight = styled.div`
+const NavSide = styled.div`
   display: flex;
-  align-items: stretch;
+  align-items: center;
   height: 100%;
 `
 
@@ -72,15 +76,41 @@ const Avatar = styled(({children, ...props}) => (
 
 const RightPanel = styled.div`
   position: fixed;
-  top: 80px;
   right: 0;
   bottom: 0;
   min-width: 350px;
   z-index: 1500;
+  ${media.desktop`
+    top: 60px;
+  `}
   ${media.mobile`
+    top: 120px;
     width: 100vw;
     left: 0;
   `}
+`
+
+const RightPanelButton = styled.button`
+  //button {
+    min-width: 50px;
+    align-self: stretch;
+    padding: 0;
+    color: #DDE5ED;
+    background-color: transparent;
+    border: none;
+    font-size: 20px;
+    transition: all 250ms ease;
+    &:hover, &:focus {
+      cursor: pointer;
+      outline: none;
+      color: #4E6180;
+      span { border-color: #4E6180; }
+    }
+    &.active {
+      color: #753BBD;
+      border-bottom: 2px solid #753BBD;
+    }
+  //}
 `
 
 const titles = {
@@ -92,43 +122,46 @@ const titles = {
 }
 
 class RawNavigationBar extends Component {
+  static propTypes = {
+    isSidebarOpen: PropTypes.bool,
+    toggleSidebar: PropTypes.func
+  }
+
   state = {
     isSearchLoading: false,
     rightPanel: null // notifications|messages|user-panel
   }
 
+  // right panel utility functions
   isOpen = key => this.state.rightPanel === key
   toggle = key => () => this.setState(prevState => ({
     rightPanel: prevState.rightPanel === key ? null : key
   }))
-
-  openSidebar = () => {
-    document.getElementById('container').classList.add('sidebar-active')
-  }
-
   getClassName = key => this.isOpen(key) ? 'active':''
 
   render() {
-    const {history, staticContext, location, ...props} = this.props
-    console.log(location.pathname)
+    const { isSidebarOpen, toggleSidebar, location, history, staticContext, ...props } = this.props
     return (
       <div {...props}>
-        <Header as="h2" className="desktop">{titles[location.pathname]}</Header>
-        <button onClick={this.openSidebar} className="mobile">
-          <Icon link name="bars"/>
-        </button>
-        <CSSearch id="search-input" placeholder="Search..."/>
-        <NavRight>
-          <button className={this.getClassName('notifications')} onClick={this.toggle('notifications')}>
+        <NavSide className="desktop">
+          <SidebarButton onClick={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
+          <Header as="h3" className="desktop">{titles[location.pathname]}</Header>
+          <button onClick={toggleSidebar} className="mobile">
+            <Icon link name="bars"/>
+          </button>
+        </NavSide>
+        <CSSearch id="search-input" placeholder="Search..." input={{ iconPosition: "left" }}/>
+        <NavSide>
+          <RightPanelButton className={this.getClassName('notifications')} onClick={this.toggle('notifications')}>
             <Icon name="bell"/>
-          </button>
-          <button className={this.getClassName('messages')} onClick={this.toggle('messages')}>
+          </RightPanelButton>
+          <RightPanelButton className={this.getClassName('messages')} onClick={this.toggle('messages')}>
             <Icon name="comment"/>
-          </button>
-          <Avatar className={this.getClassName('user-panel')} onClick={this.toggle('user-panel')}>
+          </RightPanelButton>
+          <RightPanelButton as={Avatar} className={this.getClassName('user-panel')} onClick={this.toggle('user-panel')}>
             <Icon name="user"/>
-          </Avatar>
-        </NavRight>
+          </RightPanelButton>
+        </NavSide>
         <Transition visible={this.isOpen('notifications')} animation="slide left" duration={250}>
           <RightPanel><Notifications/></RightPanel>
         </Transition>
@@ -147,34 +180,28 @@ const NavigationBar = withRouter(styled(RawNavigationBar)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
+  position: fixed;
+  right: 0;
+  left: 0;
+  height: 60px;
+  z-index: 2000;
+  //padding: 0 15px;
   background-color: white;
   border-bottom: 1px solid rgb(0, 0, 0, .25);
   box-shadow: 0 0 10px rgb(0, 0, 0, .25);
+  transition: margin 250ms ease;
+  ${media.desktop`
+    top: 0;
+    margin-left: ${props => props.isSidebarOpen ? 240 : 60}px;
+  `}
+  ${media.mobile`
+    top: 60px;
+  `}
   .ui.header {
     min-width: 180px;
-    margin: 0;
+    margin: 0 10px;
     color: #021D49;
     white-space: nowrap;
-  }
-  button {
-    min-width: 50px;
-    padding: 0;
-    color: #DDE5ED;
-    background-color: transparent;
-    border: none;
-    font-size: 22px;
-    transition: all 250ms ease;
-    &:hover, &:focus {
-      cursor: pointer;
-      outline: none;
-      color: #4E6180;
-      span { border-color: #4E6180; }
-    }
-    &.active {
-      color: #753BBD;
-      border-bottom: 2px solid #753BBD;
-    }
   }
 `)
 

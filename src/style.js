@@ -10,6 +10,7 @@ export const media = {
 export const GlobalStyle = createGlobalStyle`
 
 body {
+  background-color: #F4F4F4;
   margin: 0;
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -24,12 +25,27 @@ code {
     monospace;
 }
 
+.ui.grid {
+  &.fluid { min-width: 100%; }
+}
 .ui.header {
-  font-family: 'Eurostile';
+  font-family: 'eurostile';
   font-size: 32px;
   letter-spacing: 1px;
 }
+.ui.label .icon {
+  margin: 0;
+}
 
+.m0 {
+  margin: 0 !important;
+}
+.danger {
+  color: #EE2737;
+}
+.scroll-x {
+  overflow-x: scroll;
+}
 
 // hide in mobile
 .desktop {
@@ -49,5 +65,4 @@ code {
   &.align-start { align-items: flex-start; }
   &.align-stretch { align-items: stretch; }
 }
-
 `

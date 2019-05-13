@@ -1,147 +1,60 @@
 import React, {Component} from 'react'
-import {Card, Grid, Table, Tab, Icon, Dropdown, Input, Button, Popup} from 'semantic-ui-react'
-import styled from 'styled-components'
+import {Card, Grid, Table, Tab, Icon, Input, Button, Popup, Container} from 'semantic-ui-react'
 import CSBreadcrumb from '../components/CSBreadcrumb'
 import util from '../util'
+import {USDCIcon} from '../components'
 
-const allContracts = [
-  { id: 1, name: 'Contract 1', type: 'Safe', company: 'John Smith', age: '3 Hours 12 Minutes' },
-  { id: 2, name: 'Contract 2', type: 'Stock', company: 'XCode Capital Inc.', age: '3 Hours 12 Minutes' },
-  { id: 3, name: 'Contract 3', type: 'Convertible Note', company: 'Sarah Parker', age: '3 Hours 12 Minutes' },
-  { id: 4, name: 'Contract 4', type: 'Safe', company: 'Avengers Capital', age: '3 Hours 12 Minutes' }
-]
+/***************************************************
+ *               ADD NEW CONTRACT                  *
+ ***************************************************/
 
-const allTokens = [
-  { id: 1, name: 'STC-Token 1', type: 'Safe', company: 'John Smith', amount: 20000, age: '3 Hours 12 Minutes', isTransferable: true },
-  { id: 2, name: 'STC-Token 2', type: 'Stock', company: 'XCode Capital Inc.', amount: 10000, age: '3 Hours 12 Minutes', isTransferable: false },
-  { id: 3, name: 'STC-Token 3', type: 'Convertible Note', company: 'Sarah Parker', amount: 80000, age: '3 Hours 12 Minutes', isTransferable: true },
-  { id: 4, name: 'STC-Token 4', type: 'Safe', company: 'Avengers Capital', amount: 1000000, age: '3 Hours 12 Minutes', isTransferable: false }
-]
-
-const ContractTable = ({contracts, ...props}) => (
-  <Table striped singleLine {...props}>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell>Contract Name</Table.HeaderCell>
-        <Table.HeaderCell>Contract</Table.HeaderCell>
-        <Table.HeaderCell>Company Name</Table.HeaderCell>
-        <Table.HeaderCell>Age</Table.HeaderCell>
-        <Table.HeaderCell/>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {
-        contracts.map(contract => (
-          <Table.Row key={contract.id}>
-            <Table.Cell>{contract.name}</Table.Cell>
-            <Table.Cell>{contract.type}</Table.Cell>
-            <Table.Cell><b>{contract.company}</b></Table.Cell>
-            <Table.Cell>{contract.age}</Table.Cell>
-            <Table.Cell><Icon link name="ellipsis horizontal"/></Table.Cell>
-          </Table.Row>
-        ))
-      }
-    </Table.Body>
-  </Table>
+const NewContractItem = ({text}) => (
+  <Container textAlign="center">
+    <p>{text}</p>
+    <Button primary content="Create Contract" icon="file pdf" labelPosition="left"/>
+  </Container>
 )
-
-const TokenTable = ({tokens, ...props}) => (
-  <Table striped singleLine {...props}>
-    <Table.Header>
-      <Table.Row>
-        <Table.HeaderCell/>
-        <Table.HeaderCell>Token Name</Table.HeaderCell>
-        <Table.HeaderCell>Company Name</Table.HeaderCell>
-        <Table.HeaderCell>Amount</Table.HeaderCell>
-        <Table.HeaderCell>Age</Table.HeaderCell>
-        <Table.HeaderCell/>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      {
-        tokens.map(token => (
-          <Table.Row key={token.id}>
-            <Table.Cell>
-              { token.isTransferable && <Icon link name="shopping cart" color="red"/> }
-            </Table.Cell>
-            <Table.Cell>{token.name}</Table.Cell>
-            <Table.Cell><b>{token.company}</b></Table.Cell>
-            <Table.Cell><b>{util.formatNumber(token.amount)}</b></Table.Cell>
-            <Table.Cell>{token.age}</Table.Cell>
-            <Table.Cell><Icon link name="ellipsis horizontal"/></Table.Cell>
-          </Table.Row>
-        ))
-      }
-    </Table.Body>
-  </Table>
-)
-
-const CSCard = styled(Card)`
-  a.item, .header, .description {
-    font-family: 'Eurostile' !important;
-  }
-  .tab-container {
-    overflow-x: scroll;
-    .ui.bottom.segment.tab {
-      padding: 0;
-      border: none;
-      // remove semantic table borders
-      .ui.table {
-        border: none;
-        tr th {
-          border: 0px !important;
-          font-family: "Eurostile";
-        }
-        tr td {
-          border: 0px !important;
-          font-family: "Poppins Regular";
-        }
-      }
-    }
-  }
-`
-
-const MyContracts = props => (
-  <CSCard fluid color="violet" {...props}>
+const AddNewContract = () => (
+  <Card fluid color="violet">
     <Card.Content>
-      <Card.Header>My Contracts</Card.Header>
-      <Card.Description>But I must explain to you how all this mistaken</Card.Description>
-      <Tab className="tab-container" menu={{ color: 'violet', secondary: true, pointing: true }} panes={[
-        {
-          menuItem: 'Draft Contract',
-          render: () => <Tab.Pane><ContractTable contracts={allContracts}/></Tab.Pane>
-        },
-        {
-          menuItem: 'Waiting for payment',
-          render: () => <Tab.Pane><ContractTable contracts={allContracts.slice(0, 2)}/></Tab.Pane>
-        },
-        {
-          menuItem: 'Deployed',
-          render: () => <Tab.Pane><ContractTable contracts={allContracts.slice(2, 4)}/></Tab.Pane>
-        },
-      ]}/>
+      <Card.Header>
+        <Popup trigger={<Icon color="grey" name="info circle"/>} content="Info" inverted/>
+        Add New Contract
+      </Card.Header>
+      <Card.Meta>Subtitle</Card.Meta>
+      <Tab
+        menu={{ fluid: true, vertical: true, tabular: true }}
+        grid={{ paneWidth: 8, tabWidth: 8 }}
+        panes={[
+          {
+            menuItem: 'Safe Contract',
+            render: () => <NewContractItem text={"If you hold a SAFE (Simple Agreement for Future Equity) that you want to tokenize and sell, please select this option and then upload a copy of your SAFE."}/>
+          },
+          {
+            menuItem: 'Convertible Note Contract',
+            render: () => <NewContractItem text={"Convertible Note Contract text"}/>
+          },
+          {
+            menuItem: 'Equity Contract',
+            render: () => <NewContractItem text={"Equity Contract text"}/>
+          },
+          {
+            menuItem: 'Fund Portfolio',
+            render: () => <NewContractItem text={"Fund Portfolio text"}/>
+          },
+          {
+            menuItem: 'Umbrella Portfolio',
+            render: () => <NewContractItem text={"Umbrella Portfolio text"}/>
+          }
+        ]}
+      />
     </Card.Content>
-  </CSCard>
+  </Card>
 )
 
-const MyTokens = props => (
-  <CSCard fluid color="violet" {...props}>
-    <Card.Content>
-      <Card.Header>My Tokens</Card.Header>
-      <Card.Description>But I must explain to you how all this mistaken</Card.Description>
-      <Tab className="tab-container" menu={{ color: 'violet', secondary: true, pointing: true }} panes={[
-        {
-          menuItem: 'Transferable',
-          render: () => <Tab.Pane><TokenTable tokens={allTokens}/></Tab.Pane>
-        },
-        {
-          menuItem: 'Waiting for Payment',
-          render: () => <Tab.Pane><TokenTable tokens={allTokens.slice(0, 2)}/></Tab.Pane>
-        }
-      ]}/>
-    </Card.Content>
-  </CSCard>
-)
+/***************************************************
+ *                   BALANCES                      *
+ ***************************************************/
 
 const wallets = [
   {
@@ -153,7 +66,8 @@ const wallets = [
     balance: {eth: 2310.987654, usdc: 12210.321000}, fee: {eth: 210.53124, usdc: 300.321000}
   }
 ]
-class RawBalances extends React.Component {
+
+class Balances extends React.Component {
   inputRef = React.createRef() // address input
 
   state = {
@@ -167,110 +81,241 @@ class RawBalances extends React.Component {
     this.inputRef.current.focus()
   }
 
-  selectWallet = wallet => () => {
-    this.setState({ activeWallet: wallet })
+  handleChange = (e, data) => {
+    console.log(data)
+    this.setState({ activeWallet: wallets[data.activeIndex] })
   }
 
   render() {
     const activeWallet = this.state.activeWallet
     return (
-      <CSCard fluid color="violet" {...this.props}>
+      <Card fluid color="violet">
         <Card.Content>
-          <Card.Header>Balances</Card.Header>
-          <Card.Description>But I must explain to you how all this mistaken</Card.Description>
-          <div>
-            <Icon name="star" color="violet"/>
-            <Dropdown text={activeWallet.name}>
-              <Dropdown.Menu>
-                {
-                  wallets.map(wallet => (
-                    <Dropdown.Item key={wallet.id} text={wallet.name} onClick={this.selectWallet(wallet)}/>
-                  ))
-                }
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-          <Input action value={activeWallet.address} fluid ref={this.inputRef}>
-            <input/>
-            <Button color="violet" content="Copy" icon="copy" labelPosition="right" onClick={this.handleCopy}/>
-          </Input>
-          <div id="balance-info">
-            <Table singleLine>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>
-                    <Popup trigger={<Icon name="info circle"/>} content="Info" size="tiny" inverted/> <b>Services Fee</b>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Icon name="ethereum"/> {activeWallet.fee.eth} <Icon name="dollar"/> {activeWallet.fee.eth}
-                  </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell><b>ETH Balance</b></Table.Cell>
-                  <Table.Cell><Icon name="ethereum"/> {activeWallet.balance.eth}</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell><b>USDC Balance</b></Table.Cell>
-                  <Table.Cell><Icon name="dollar"/> {activeWallet.balance.eth}</Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
-            <Button inverted color="blue" size="small">ADD BALANCE</Button>
-          </div>
-          <Icon id="balance-detail-button" link name="ellipsis horizontal"/>
+          <Card.Header>
+            <Popup trigger={<Icon color="grey" name="info circle"/>} content="Info" inverted/>
+            Balances
+          </Card.Header>
+          <Card.Meta>Subtitle</Card.Meta>
+          <Tab
+            menu={{ secondary: true, pointing: true }}
+            defaultActiveIndex={0}
+            onTabChange={this.handleChange}
+            panes={wallets.map(wallet => ({
+              menuItem: wallet.name,
+              render: () => (
+                <Tab.Pane>
+                  <Input action value={activeWallet.address} fluid ref={this.inputRef}>
+                    <input/>
+                    <Button primary content="Copy" icon="copy" labelPosition="right" onClick={this.handleCopy}/>
+                  </Input>
+                  <Table celled>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell>Wallet</Table.HeaderCell>
+                        <Table.HeaderCell><Icon name="ethereum"/>ETH</Table.HeaderCell>
+                        <Table.HeaderCell><USDCIcon/>USDC</Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      <Table.Row>
+                        <Table.Cell textAlign="center">
+                          <Button primary basic content="Set Primary Wallet"/>
+                        </Table.Cell>
+                        <Table.Cell>{activeWallet.balance.eth}</Table.Cell>
+                        <Table.Cell>{activeWallet.balance.usdc}</Table.Cell>
+                      </Table.Row>
+                    </Table.Body>
+                  </Table>
+                  <Table celled>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell>
+                          <Popup trigger={<Icon name="info circle"/>} content="Info" size="tiny" inverted/>
+                          Service Fee
+                        </Table.HeaderCell>
+                        <Table.HeaderCell><Icon name="ethereum"/>ETH</Table.HeaderCell>
+                        <Table.HeaderCell><USDCIcon/>USDC</Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      <Table.Row>
+                        <Table.Cell textAlign="center">
+                          <Button color="blue" basic content="Add Balance"/>
+                        </Table.Cell>
+                        <Table.Cell>{activeWallet.fee.eth}</Table.Cell>
+                        <Table.Cell>{activeWallet.fee.usdc}</Table.Cell>
+                      </Table.Row>
+                    </Table.Body>
+                  </Table>
+                </Tab.Pane>
+              )
+            }))}
+          />
         </Card.Content>
-      </CSCard>
+      </Card>
     )
   }
 }
 
-const Balances = styled(RawBalances)`
-  .ui.dropdown {
-    color: #6435c9;
-    margin: 15px 0;
-    font-family: "Eurostile";
-    font-weight: bold;
-  }
-  .ui.input {
-    font-family: "Poppins Black";
-  }
-  #balance-info {
-    margin-top: 15px;
-    display: flex;
-    align-items: flex-start;
-    white-space: nowrap;
-    overflow-x: scroll;
-    font-family: "Poppins Regular";
-    // remove semantic table borders
-    .ui.table {
-      border: none;
-      tr td, tr th { border: none !important; }
-    }
-    .ui.button {
-      padding: 15px 10px;
-      font-family: "Poppins Bold";
-    }
-  }
-  #balance-detail-button {
-    display: block;
-    margin: 15px auto 5px auto;
-  }
-`
+/***************************************************
+ *                  MY CONTRACTS                   *
+ ***************************************************/
+
+const allContracts = [
+  { id: '51VY-VPY-W9K', name: 'Contract 1', type: 'Safe', company: 'John Smith', age: '3 Hours 12 Minutes', amount: 200000 },
+  { id: '51VY-VPY-W9S', name: 'Contract 2', type: 'Stock', company: 'XCode Capital Inc.', age: '3 Hours 12 Minutes', amount: 200000 },
+  { id: '51VY-VPY-W9V', name: 'Contract 3', type: 'Convertible Note', company: 'Sarah Parker', age: '3 Hours 12 Minutes', amount: 200000 },
+  { id: '51VY-VPY-W9A', name: 'Contract 4', type: 'Safe', company: 'Avengers Capital', age: '3 Hours 12 Minutes', amount: 200000 }
+]
+
+const ContractTable = ({contracts}) => (
+  <Table celled striped singleLine sortable>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>Contract ID</Table.HeaderCell>
+        <Table.HeaderCell>Company Name</Table.HeaderCell>
+        <Table.HeaderCell>Type</Table.HeaderCell>
+        <Table.HeaderCell>
+          <Popup trigger={<Icon name="info circle"/>} content="Info" inverted/>
+          Age
+        </Table.HeaderCell>
+        <Table.HeaderCell>
+          <Popup trigger={<Icon name="info circle"/>} content="Info" inverted/>
+          Purchase Amount
+        </Table.HeaderCell>
+        <Table.HeaderCell/>
+      </Table.Row>
+    </Table.Header>
+    <Table.Body>
+      {
+        contracts.map(contract => (
+          <Table.Row key={contract.id}>
+            <Table.Cell><b>{contract.id}</b></Table.Cell>
+            <Table.Cell>{contract.name}</Table.Cell>
+            <Table.Cell>{contract.type}</Table.Cell>
+            <Table.Cell>{contract.age}</Table.Cell>
+            <Table.Cell><Icon name="dollar"/>{util.formatNumberFloat(contract.amount)}</Table.Cell>
+            <Table.Cell>
+              <Button primary content="Complete" icon="chevron right" labelPosition="right"/>
+            </Table.Cell>
+          </Table.Row>
+        ))
+      }
+    </Table.Body>
+  </Table>
+)
+
+
+const MyContracts = () => (
+  <Card fluid color="violet" className="scroll-x">
+    <Card.Content>
+      <Card.Header>My Contracts</Card.Header>
+      <Card.Description>But I must explain to you how all this mistaken</Card.Description>
+      <Tab menu={{ secondary: true, pointing: true }} panes={[
+        {
+          menuItem: 'Draft',
+          render: () => <Tab.Pane><ContractTable contracts={allContracts}/></Tab.Pane>
+        },
+        {
+          menuItem: 'Waiting for Payment',
+          render: () => <Tab.Pane><ContractTable contracts={allContracts.slice(0, 2)}/></Tab.Pane>
+        },
+        {
+          menuItem: 'Smart Contracts',
+          render: () => <Tab.Pane><ContractTable contracts={allContracts.slice(2, 4)}/></Tab.Pane>
+        },
+        {
+          menuItem: 'On Marketplace',
+          render: () => <Tab.Pane><ContractTable contracts={allContracts.slice(2, 4)}/></Tab.Pane>
+        },
+      ]}/>
+    </Card.Content>
+  </Card>
+)
+
+/***************************************************
+ *                     MY TOKENS                   *
+ ***************************************************/
+
+const allTokens = [
+  { id: 1, name: 'STC-Token 1', type: 'Safe', company: 'John Smith', amount: 20000, age: '3 Hours 12 Minutes', isTransferable: true, address: 'x04a3c71dcecc5da65d1f1c4871eb4d14ecc5da65d' },
+  { id: 2, name: 'STC-Token 2', type: 'Stock', company: 'XCode Capital Inc.', amount: 10000, age: '3 Hours 12 Minutes', isTransferable: false, address: 'x04a3c71dcecc5da65d1f1c4871eb4d14ecc5da65d' },
+  { id: 3, name: 'STC-Token 3', type: 'Convertible Note', company: 'Sarah Parker', amount: 80000, age: '3 Hours 12 Minutes', isTransferable: true, address: 'x04a3c71dcecc5da65d1f1c4871eb4d14ecc5da65d' },
+  { id: 4, name: 'STC-Token 4', type: 'Safe', company: 'Avengers Capital', amount: 1000000, age: '3 Hours 12 Minutes', isTransferable: false, address: 'x04a3c71dcecc5da65d1f1c4871eb4d14ecc5da65d' }
+]
+
+const TokenTable = ({tokens}) => (
+  <Table celled striped singleLine sortable>
+    <Table.Header>
+      <Table.Row>
+        <Table.HeaderCell>Token ID</Table.HeaderCell>
+        <Table.HeaderCell>Contract</Table.HeaderCell>
+        <Table.HeaderCell>Smart Contract</Table.HeaderCell>
+        <Table.HeaderCell>
+          <Popup trigger={<Icon name="info circle"/>} content="Info" inverted/>
+          Amount
+        </Table.HeaderCell>
+        <Table.HeaderCell/>
+      </Table.Row>
+    </Table.Header>
+    <Table.Body>
+      {
+        tokens.map(token => (
+          <Table.Row key={token.id}>
+            <Table.Cell><b>{token.id}</b></Table.Cell>
+            <Table.Cell>{token.type}</Table.Cell>
+            <Table.Cell><b>{token.address}</b></Table.Cell>
+            <Table.Cell><Icon name="ethereum"/>{util.formatNumber(token.amount)}</Table.Cell>
+            <Table.Cell>
+              <Button negative content="Sell" icon="chevron right" labelPosition="right"/>
+            </Table.Cell>
+          </Table.Row>
+        ))
+      }
+    </Table.Body>
+  </Table>
+)
+
+const MyTokens = () => (
+  <Card fluid color="violet" className="scroll-x">
+    <Card.Content>
+      <Card.Header>My Tokens</Card.Header>
+      <Card.Description>But I must explain to you how all this mistaken</Card.Description>
+      <Tab menu={{ secondary: true, pointing: true }} panes={[
+        {
+          menuItem: 'Transferable',
+          render: () => <Tab.Pane><TokenTable tokens={allTokens}/></Tab.Pane>
+        },
+        {
+          menuItem: 'Waiting for Payment',
+          render: () => <Tab.Pane><TokenTable tokens={allTokens.slice(0, 2)}/></Tab.Pane>
+        },
+        {
+          menuItem: 'Smart Contracts',
+          render: () => <Tab.Pane><TokenTable tokens={allTokens.slice(0, 2)}/></Tab.Pane>
+        },
+        {
+          menuItem: 'On Marketplace',
+          render: () => <Tab.Pane><TokenTable tokens={allTokens.slice(0, 2)}/></Tab.Pane>
+        }
+      ]}/>
+    </Card.Content>
+  </Card>
+)
 
 class MyPortfolio extends Component {
   render() {
     return (
       <div>
         <CSBreadcrumb title="My Portfolio"/>
-        <Grid stackable padded columns={3}>
+        <Grid stackable padded columns={2}>
+          <Grid.Column>
+            <AddNewContract/>
+            <Balances/>
+          </Grid.Column>
           <Grid.Column>
             <MyContracts/>
-          </Grid.Column>
-          <Grid.Column>
             <MyTokens/>
-          </Grid.Column>
-          <Grid.Column>
-            <Balances/>
           </Grid.Column>
         </Grid>
       </div>

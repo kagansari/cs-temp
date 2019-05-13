@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import {Icon} from 'semantic-ui-react'
 import React from 'react'
 import mockPP from './mock-pp.png'
+import {Link} from 'react-router-dom'
 
 const user = {
   firstname: 'Dominic',
@@ -25,18 +26,18 @@ const UserPanel = styled(props => (
       </div>
       <Icon name="check" size="large"/>
     </div>
-    <a className="menu-item">
+    <Link to="/" className="menu-item">
       <Icon name="user"/>
       <span>Profile</span>
-    </a>
-    <a className="menu-item">
+    </Link>
+    <Link to="/" className="menu-item">
       <Icon name="cog"/>
       <span>Settings</span>
-    </a>
-    <a className="menu-item">
+    </Link>
+    <Link to="/" className="menu-item">
       <Icon name="sign out alternate"/>
       <span>Logout</span>
-    </a>
+    </Link>
   </div>
 ))`
   background-color: white;
