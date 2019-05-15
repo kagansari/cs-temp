@@ -93,7 +93,7 @@ class Offer extends React.Component {
     const { amount, price, offer: { started, sending, sent } } = this.state
 
     return (
-      <Card fluid color="violet">
+      <Card fluid>
         <Card.Content>
           <Dimmer active={sending} inverted><Loader/></Dimmer>
           <Card.Header>Make an Offer</Card.Header>

@@ -8,7 +8,7 @@ import {marketplace as mockData} from '../../util/mock'
 import {Button, Card, Container, Dimmer, Grid, Icon, Loader, Popup, Segment} from 'semantic-ui-react'
 
 const MockCard = () => (
-  <Card fluid color="violet">
+  <Card fluid>
     <Card.Content>
       <Card.Header>
         <Popup trigger={<Icon color="grey" name="info circle"/>} content="Info" inverted/>
@@ -17,7 +17,7 @@ const MockCard = () => (
       <Card.Meta>Subtitle</Card.Meta>
       <br/><br/>
     </Card.Content>
-    <Card.Content>
+    <Card.Content extra>
       <Icon name="clock outline" color="grey"/> <small>Last updated: 12 Min.</small>
     </Card.Content>
   </Card>
@@ -152,7 +152,7 @@ class Marketplace extends Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column>
-            <Card fluid raised color="violet">
+            <Card fluid raised>
               <Card.Content>
                 <Dimmer inverted active={this.state.isLoading}>
                   <Loader content='Loading' />
@@ -171,7 +171,7 @@ class Marketplace extends Component {
                   <Button labelPosition="left" icon="ellipsis horizontal" content="Load More" onClick={this.search}/>
                 </Segment>
               </Card.Content>
-              <Card.Content>
+              <Card.Content extra>
                 <Icon name="clock outline" color="grey"/> <small>Last updated: 12 Min.</small>
               </Card.Content>
             </Card>

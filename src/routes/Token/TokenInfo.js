@@ -25,9 +25,9 @@ const tokenInfo = [
   { key: 'Contract', value: 'Safe' },
   { key: 'Age', value: '12.09.2019' },
   { key: 'Transferable', value: 'Available' },
-  { key: 'Amount', value: <Fragment><Icon name="ethereum">{util.formatNumberFloat(120000)}</Icon></Fragment> },
-  { key: 'Price', value: <Fragment><Icon name="dollar">{util.formatNumberFloat(250000)}</Icon></Fragment> },
-  { key: 'Price Per Token', value: <Fragment><Icon name="dollar">{util.formatNumberFloat(.48)}</Icon></Fragment> },
+  { key: 'Amount', value: <Fragment><Icon name="ethereum"/>{util.formatNumberFloat(120000)}</Fragment> },
+  { key: 'Price', value: <Fragment><Icon name="dollar"/>{util.formatNumberFloat(250000)}</Fragment> },
+  { key: 'Price Per Token', value: <Fragment><Icon name="dollar"/>{util.formatNumberFloat(.48)}</Fragment> },
   { key: 'Description', value: 'Lorem ipsum dolor sit amet' }
 ]
 
@@ -51,7 +51,7 @@ class TokenInfo extends React.Component {
   render() {
     const { offer: { started, sending, sent } } = this.state
     return (
-      <Card fluid color="violet">
+      <Card fluid>
         <Card.Content>
           <Dimmer active={sending} inverted><Loader/></Dimmer>
           {

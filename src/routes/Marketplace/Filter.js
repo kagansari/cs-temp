@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Checkbox, Dropdown, Grid, Header, Icon, Input, Label, Transition} from 'semantic-ui-react'
+import {Button, Checkbox, Dropdown, Form, Grid, Header, Icon, Input, Label, Transition} from 'semantic-ui-react'
 import MaskedInput from 'react-text-mask'
 import createNumberMask from 'text-mask-addons/dist/createNumberMask'
 
@@ -41,13 +41,23 @@ const FilterHeader = ({filterHandler, toggleFilter, labels, search}) => (
         <Button icon="sync alternate" content="Update" color="blue" labelPosition="right" onClick={search}/>
       </Grid.Column>
       <Grid.Column tablet={16} computer={10} textAlign="right">
-        <Input
-          label={<Dropdown defaultValue='contract' options={contractTypes}/>}
-          labelPosition='right'
-          placeholder="ID"
-        />
-        <Button icon="trash" content="Clear" labelPosition="left" onClick={filterHandler.resetAll}/>
-        <Button icon="check" content="Apply" labelPosition="left" onClick={search}/>
+        <Form>
+          <Form.Group style={{justifyContent: 'flex-end'}}>
+            <Form.Field>
+              <Input
+                label={<Dropdown defaultValue='contract' options={contractTypes}/>}
+                labelPosition='right'
+                placeholder="ID"
+              />
+            </Form.Field>
+            <Form.Field>
+              <Button icon="trash" content="Clear" labelPosition="left" onClick={filterHandler.resetAll}/>
+            </Form.Field>
+            <Form.Field>
+              <Button icon="check" content="Apply" labelPosition="left" onClick={search}/>
+            </Form.Field>
+          </Form.Group>
+        </Form>
       </Grid.Column>
     </Grid.Row>
   </Grid>

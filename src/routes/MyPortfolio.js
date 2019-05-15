@@ -15,7 +15,7 @@ const NewContractItem = ({text}) => (
   </Container>
 )
 const AddNewContract = () => (
-  <Card fluid color="violet">
+  <Card fluid>
     <Card.Content>
       <Card.Header>
         <Popup trigger={<Icon color="grey" name="info circle"/>} content="Info" inverted/>
@@ -89,7 +89,7 @@ class Balances extends React.Component {
   render() {
     const activeWallet = this.state.activeWallet
     return (
-      <Card fluid color="violet">
+      <Card fluid>
         <Card.Content>
           <Card.Header>
             <Popup trigger={<Icon color="grey" name="info circle"/>} content="Info" inverted/>
@@ -207,7 +207,7 @@ const ContractTable = ({contracts}) => (
 
 
 const MyContracts = () => (
-  <Card fluid color="violet" className="scroll-x">
+  <Card fluid className="scroll-x">
     <Card.Content>
       <Card.Header>My Contracts</Card.Header>
       <Card.Description>But I must explain to you how all this mistaken</Card.Description>
@@ -277,7 +277,7 @@ const TokenTable = ({tokens}) => (
 )
 
 const MyTokens = () => (
-  <Card fluid color="violet" className="scroll-x">
+  <Card fluid className="scroll-x">
     <Card.Content>
       <Card.Header>My Tokens</Card.Header>
       <Card.Description>But I must explain to you how all this mistaken</Card.Description>

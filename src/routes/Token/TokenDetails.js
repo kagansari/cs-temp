@@ -461,7 +461,7 @@ class TokenDetails extends Component {
 
   render() {
     return (
-      <Card fluid color="violet" className="scroll-x">
+      <Card fluid className="scroll-x">
         { this.state.showQuestion && <AskQuestionsContent options={questionOptions} onCancel={this.closeQuestion}/> }
         { !this.state.showQuestion && <TokenDetailsContent openQuestion={this.openQuestion}/> }
       </Card>
